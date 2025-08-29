@@ -1,0 +1,22 @@
+2025-04-12 01:12:38,527 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-12 01:12:38,528 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-12 01:15:18,450 - ERROR - [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\monsu\\AppData\\Local\\Temp\\tmp_hft7xk5\\EBWebView\\Default\\ExtensionActivityComp'
+Traceback (most recent call last):
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\site-packages\webview\platforms\edgechromium.py", line 94, in clear_user_data
+    shutil.rmtree(self.user_data_folder)
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\shutil.py", line 749, in rmtree
+    return _rmtree_unsafe(path, onerror)
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\shutil.py", line 614, in _rmtree_unsafe
+    _rmtree_unsafe(fullname, onerror)
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\shutil.py", line 614, in _rmtree_unsafe
+    _rmtree_unsafe(fullname, onerror)
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\shutil.py", line 619, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Users\monsu\AppData\Local\Programs\Python\Python310\lib\shutil.py", line 617, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\monsu\\AppData\\Local\\Temp\\tmp_hft7xk5\\EBWebView\\Default\\ExtensionActivityComp'
+2025-04-12 01:16:04,221 - INFO - Starting Flask Server with Waitress...
+2025-04-12 01:16:04,235 - INFO - Serving on http://127.0.0.1:5000
+2025-04-12 01:17:14,682 - INFO - Starting Flask Server with Waitress...
+2025-04-12 01:17:14,692 - INFO - Serving on http://127.0.0.1:5000

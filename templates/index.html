@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Auto-Filler</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    .loader {
+      display: none;
+      font-size: 1rem;
+      color: #0d6efd;
+    }
+    .pdf-preview {
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .download-all-btn {
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container mt-5 p-4 bg-white rounded shadow">
+    <h2 class="mb-4">📄 Upload PDF to Extract & Fill Application Form</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="pdf_file" class="form-label">Select your PDF Form(s)</label>
+        <input type="file" name="pdf_file" id="pdf_file" accept="application/pdf" class="form-control" multiple required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">📤 Upload and Process</button>
+      <span class="loader" id="loader">⏳ Processing... Please wait</span>
+    </form>
+
+    {% if filled %}
+    <div class="alert alert-success mt-4">
+      ✅ Successfully processed {{ filled_files|length }} PDF(s)!
+    </div>
+
+    <hr>
+    <h5 class="mt-4">🖨️ Filled PDF Results:</h5>
+
+    {% for file_info in filled_files %}
+    <div class="pdf-preview">
+      <h6>Filled Form #{{ loop.index }}</h6>
+      <object data="{{ file_info.url }}" type="application/pdf" width="100%" height="600px">
+        <p>
+          ❗ PDF preview not supported in your browser.
+          <a href="{{ file_info.url }}" target="_blank">Click here to download</a>.
+        </p>
+      </object>
+      <div class="mt-2">
+        <a href="{{ file_info.url }}" download="{{ file_info.filename }}" class="btn btn-success me-2">
+          ⬇️ Download This Form
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Download All Button -->
+    <div class="text-center download-all-btn">
+      <button id="downloadAll" class="btn btn-primary btn-lg">
+        ⬇️ Download All Filled Forms (ZIP)
+      </button>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // Form submission loader
+    document.querySelector("form").addEventListener("submit", function() {
+      const btn = document.querySelector("button[type='submit']");
+      const loader = document.getElementById("loader");
+      btn.disabled = true;
+      loader.style.display = "inline-block";
+    });
+
+    // Download All functionality
+    {% if filled %}
+    document.getElementById('downloadAll').addEventListener('click', function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Preparing download...';
+      
+      fetch('/download-all', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          files: [
+            {% for file_info in filled_files %}
+            {"url": "{{ file_info.url }}", "filename": "{{ file_info.filename }}"}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'filled_forms.zip';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        btn.disabled = false;
+        btn.innerHTML = '⬇️ Download All Filled Forms (ZIP)';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        btn.disabled = false;
+        btn.innerHTML = '⬇️ Download All Filled Forms (ZIP)';
+        alert('Error preparing download. Please try again.');
+      });
+    });
+    {% endif %}
+  </script>
+</body>
+</html>
