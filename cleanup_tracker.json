@@ -1,0 +1,12 @@
+{
+  "last_cleanup_date": "2025-11-25T13:12:43.302361",
+  "cleanup_history": [
+    {
+      "timestamp": "2025-11-25T13:12:43.302902",
+      "upload_files_deleted": 20,
+      "static_files_deleted": 20,
+      "upload_files_remaining": 0,
+      "static_files_remaining": 0
+    }
+  ]
+}
